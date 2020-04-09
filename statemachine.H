@@ -56,7 +56,7 @@ public:
 
 /** State machine.
  *
- *  This class was designed in order to being reused for any class that can be
+ *  This class was designed in order to be reused for any class that can be
  *  in exactly one of a finite number of states at any given time. It was
  *  adapted to be used with Qt's QKeyEvent and QPainter.
  *

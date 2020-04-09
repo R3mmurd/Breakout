@@ -29,7 +29,7 @@
 
 /** Generic Singleton.
  *
- *  This class was designed in order to being reused for any class that
+ *  This class was designed in order to be reused for any class that
  *  requires only one instance.
  *
  *  @param T Base class.
