@@ -1,6 +1,7 @@
 /*
-  This file is part of Fatty Bird game.
-  Copyright (C) 2020 by Alejandro J. Mujica
+  This file contains a reusable and generic implementation of the State
+  Machine Pattern.
+  Copyright (C) 2017 Alejandro J. Mujica.
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,7 +22,6 @@
 
   aledrums@gmail.com
 */
-
 # ifndef STATEMACHINE_H
 # define STATEMACHINE_H
 
@@ -31,29 +31,47 @@
 #include <QPainter>
 #include <QKeyEvent>
 
-template <class GameEntityType>
+/** State .
+ *
+ *  Base state in which could be a state machine in a given time.
+ *
+ *  @param ConcreteStateMachine: is the class that will be the state machine.
+ *
+ *  @author: Alejandro J. Mujica
+ */
+template <class ConcreteStateMachine>
 class State
 {
 public:
-  virtual void enter(GameEntityType *) = 0;
+  virtual void enter(ConcreteStateMachine *) = 0;
 
-  virtual void exec(GameEntityType *, double) = 0;
+  virtual void exec(ConcreteStateMachine *, double) = 0;
 
-  virtual void exit(GameEntityType *) = 0;
+  virtual void exit(ConcreteStateMachine *) = 0;
 
-  virtual void draw(GameEntityType *, QPainter &) = 0;
+  virtual void draw(ConcreteStateMachine *, QPainter &) = 0;
 
-  virtual void key_pressed(GameEntityType *, QKeyEvent *) = 0;
+  virtual void key_pressed(ConcreteStateMachine *, QKeyEvent *) = 0;
 };
 
-template <class GameEntityType>
+/** State machine.
+ *
+ *  This class was designed in order to being reused for any class that can be
+ *  in exactly one of a finite number of states at any given time. It was
+ *  adapted to be used with Qt's QKeyEvent and QPainter.
+ *
+ *  @param ConcreteStateMachine: is the class that will be the state machine.
+ *
+ *  @author: Alejandro J. Mujica
+ */
+template <class ConcreteStateMachine>
 class StateMachine 
 {
-  State<GameEntityType> * current_state;
-  State<GameEntityType> * last_state;
+  State<ConcreteStateMachine> * current_state;
+  State<ConcreteStateMachine> * last_state;
 
 public:
-  StateMachine(State<GameEntityType> * initial_state)
+  StateMachine(State<ConcreteStateMachine> * initial_state)
     : current_state(initial_state), last_state(nullptr)
   {
     if (current_state == nullptr)
@@ -62,17 +80,17 @@ public:
     current_state->enter(me());
   }
 
-  GameEntityType * me()
+  ConcreteStateMachine * me()
   {
-    return static_cast<GameEntityType *>(this);
+    return static_cast<ConcreteStateMachine *>(this);
   }
 
-  const GameEntityType * const_me() const
+  const ConcreteStateMachine * const_me() const
   {
-    return static_cast<const GameEntityType *>(this);
+    return static_cast<const ConcreteStateMachine *>(this);
   }
 
-  operator GameEntityType & ()
+  operator ConcreteStateMachine & ()
   {
     return *me();
   }
@@ -83,7 +101,7 @@ public:
     current_state->exec(me(), dt);
   }
 
-  void change_state(State<GameEntityType> * new_state)
+  void change_state(State<ConcreteStateMachine> * new_state)
   {
     assert(new_state != nullptr);
     
