@@ -28,8 +28,24 @@ CONFIG += c++14
 QT += core widgets multimedia
 
 HEADERS += \
+    constants.H \
+    gamemain.H \
     statemachine.H \
-    singleton.H
+    singleton.H \
+    states.H \
+    audio.H \
+    font.H
 
 DISTFILES += \
     README.md
+
+SOURCES += \
+    constants.C \
+    gamemain.C \
+    main.C \
+    states.C \
+    audio.C \
+    font.C
+
+RESOURCES += \
+    multimedia.qrc

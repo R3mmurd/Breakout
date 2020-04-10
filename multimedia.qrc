@@ -1,0 +1,30 @@
+<RCC>
+    <qresource prefix="/audio">
+        <file alias="brick-hit-1">audio/brick-hit-1.wav</file>
+        <file alias="brick-hit-2">audio/brick-hit-2.wav</file>
+        <file alias="conform">audio/confirm.wav</file>
+        <file alias="high-score">audio/high_score.wav</file>
+        <file alias="hurt">audio/hurt.wav</file>
+        <file alias="music">audio/music.wav</file>
+        <file alias="no-select">audio/no-select.wav</file>
+        <file alias="paddle-hit">audio/paddle_hit.wav</file>
+        <file alias="pause">audio/pause.wav</file>
+        <file alias="recover">audio/recover.wav</file>
+        <file alias="score">audio/score.wav</file>
+        <file alias="select">audio/select.wav</file>
+        <file alias="victory">audio/victory.wav</file>
+        <file alias="wall-hit">audio/wall_hit.wav</file>
+    </qresource>
+    <qresource prefix="/images">
+        <file alias="arrows">images/arrows.png</file>
+        <file alias="background">images/background.png</file>
+        <file alias="block">images/blocks.png</file>
+        <file alias="breakout">images/breakout.png</file>
+        <file alias="hearts">images/hearts.png</file>
+        <file alias="particle">images/particle.png</file>
+        <file alias="ui">images/ui.png</file>
+    </qresource>
+    <qresource prefix="/fonts">
+        <file alias="font">fonts/font.ttf</file>
+    </qresource>
+</RCC>

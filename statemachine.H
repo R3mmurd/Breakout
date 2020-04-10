@@ -43,15 +43,30 @@ template <class ConcreteStateMachine>
 class State
 {
 public:
-  virtual void enter(ConcreteStateMachine *) = 0;
+  virtual void enter(ConcreteStateMachine *)
+  {
+    // Empty
+  }
 
-  virtual void exec(ConcreteStateMachine *, double) = 0;
+  virtual void exec(ConcreteStateMachine *, double)
+  {
+    // Empty
+  }
 
-  virtual void exit(ConcreteStateMachine *) = 0;
+  virtual void exit(ConcreteStateMachine *)
+  {
+    // Empty
+  }
 
-  virtual void draw(ConcreteStateMachine *, QPainter &) = 0;
+  virtual void draw(ConcreteStateMachine *, QPainter &)
+  {
+    // Empty
+  }
 
-  virtual void key_pressed(ConcreteStateMachine *, QKeyEvent *) = 0;
+  virtual void key_pressed(ConcreteStateMachine *, QKeyEvent *)
+  {
+    // Empty
+  }
 };
 
 /** State machine.
