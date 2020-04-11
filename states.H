@@ -27,6 +27,9 @@
 
 #include <singleton.H>
 #include <statemachine.H>
+#include <paddle.H>
+#include <ball.H>
+#include <brick.H>
 
 class GameMain;
 
@@ -40,6 +43,26 @@ public:
   void key_pressed(GameMain *, QKeyEvent *) override;
 
   void draw(GameMain *, QPainter &) override;
+};
+
+class PlayState :
+    public State<GameMain>,
+    public Singleton<PlayState>
+{
+  Paddle paddle;
+  Ball ball;
+  QVector<Brick> bricks;
+
+public:
+  PlayState();
+
+  void update(GameMain *, double) override;
+
+  void draw(GameMain *, QPainter &) override;
+
+  void key_pressed(GameMain *, QKeyEvent *) override;
+
+  void key_released(GameMain *, QKeyEvent *) override;
 };
 
 class HighScoreState :
@@ -73,13 +96,6 @@ class GameOverState  :
 class ServeState :
     public State<GameMain>,
     public Singleton<ServeState>
-{
-
-};
-
-class PlayState :
-    public State<GameMain>,
-    public Singleton<PlayState>
 {
 
 };

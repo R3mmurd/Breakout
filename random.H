@@ -22,13 +22,33 @@
   aledrums@gmail.com
 */
 
-#include <QApplication>
-#include <gamemain.H>
+#ifndef RANDOM_H
+#define RANDOM_H
 
-int main(int argc, char *argv[])
+#include <random>
+#include <chrono>
+
+#include <singleton.H>
+
+class Random : public Singleton<Random>
 {
-  QApplication app(argc, argv);
-  GameMain canvas;
-  canvas.show();
-  return app.exec();
-}
+  using clock_t = std::chrono::high_resolution_clock;
+  std::mt19937_64 rng;
+
+public:
+  Random();
+
+  void set_seed(unsigned);
+
+  double random();
+
+  double random(double);
+
+  double random(double, double);
+
+  int random(int);
+
+  int random(int, int);
+};
+
+#endif // RANDOM_H

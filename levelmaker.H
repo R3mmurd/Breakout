@@ -22,13 +22,20 @@
   aledrums@gmail.com
 */
 
-#include <QApplication>
-#include <gamemain.H>
+#ifndef LEVELMAKER_H
+#define LEVELMAKER_H
 
-int main(int argc, char *argv[])
+#include <QVector>
+
+#include <brick.H>
+#include <singleton.H>
+
+class LevelMaker : public Singleton<LevelMaker>
 {
-  QApplication app(argc, argv);
-  GameMain canvas;
-  canvas.show();
-  return app.exec();
-}
+public:
+  LevelMaker();
+
+  QVector<Brick> create_map();
+};
+
+#endif // LEVELMAKER_H

@@ -28,24 +28,38 @@ CONFIG += c++14
 QT += core widgets multimedia
 
 HEADERS += \
-    constants.H \
+    ball.H \
+    brick.H \
     gamemain.H \
+    global.H \
+    levelmaker.H \
+    paddle.H \
+    random.H \
+    spritesheet.H \
     statemachine.H \
     singleton.H \
     states.H \
     audio.H \
-    font.H
+    font.H \
+    util.H
 
 DISTFILES += \
     README.md
 
 SOURCES += \
-    constants.C \
+    ball.C \
+    brick.C \
     gamemain.C \
+    global.C \
+    levelmaker.C \
     main.C \
+    paddle.C \
+    random.C \
+    spritesheet.C \
     states.C \
     audio.C \
-    font.C
+    font.C \
+    util.C
 
 RESOURCES += \
     multimedia.qrc

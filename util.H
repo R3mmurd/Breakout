@@ -22,13 +22,21 @@
   aledrums@gmail.com
 */
 
-#include <QApplication>
-#include <gamemain.H>
+#ifndef UTIL_H
+#define UTIL_H
 
-int main(int argc, char *argv[])
-{
-  QApplication app(argc, argv);
-  GameMain canvas;
-  canvas.show();
-  return app.exec();
-}
+#include <QVector>
+#include <QPixmap>
+#include <QRectF>
+
+QVector<QRectF> generate_drawing_rects(double, double, double, double);
+
+QVector<QRectF> slice(const QVector<QRectF> &, int, int, int step=1);
+
+QVector<QVector<QRectF> > generate_paddle_drawing_rects();
+
+QVector<QRectF> generate_ball_drawing_rects();
+
+QVector<QRectF> generate_brick_drawing_rects();
+
+#endif // UTIL_H

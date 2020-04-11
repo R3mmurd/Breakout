@@ -22,13 +22,37 @@
   aledrums@gmail.com
 */
 
-#include <QApplication>
-#include <gamemain.H>
+#ifndef PADDLE_H
+#define PADDLE_H
 
-int main(int argc, char *argv[])
+#include <QPainter>
+
+#include <global.H>
+
+class Paddle
 {
-  QApplication app(argc, argv);
-  GameMain canvas;
-  canvas.show();
-  return app.exec();
-}
+  int skin = 0;
+  int size = 1;
+
+  double width = Global::all_paddles[skin][size].width();
+  double height = Global::all_paddles[skin][size].height();
+  double dx = 0;
+  double x = Global::VIRTUAL_WIDTH/2 - width/2;
+  double y = Global::VIRTUAL_HEIGHT - 32;
+public:
+  Paddle();
+
+  void move_left();
+
+  void move_right();
+
+  void stop();
+
+  void update(double);
+
+  void draw(QPainter &) const;
+
+  QRectF get_collision_rect() const;
+};
+
+#endif // PADDLE_H

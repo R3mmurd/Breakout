@@ -22,13 +22,29 @@
   aledrums@gmail.com
 */
 
-#include <QApplication>
-#include <gamemain.H>
+#include <levelmaker.H>
+#include <random.H>
+#include <global.H>
 
-int main(int argc, char *argv[])
+LevelMaker::LevelMaker()
 {
-  QApplication app(argc, argv);
-  GameMain canvas;
-  canvas.show();
-  return app.exec();
+
+}
+
+QVector<Brick> LevelMaker::create_map()
+{
+  int num_rows = Random::get_instance().random(1, 5);
+  int num_cols = Random::get_instance().random(7, 13);
+
+  QVector<Brick> bricks;
+
+  for (int y = 1; y <= num_rows; ++y)
+    for (int x = 0; x < num_cols; ++x)
+      {
+        Brick b(x * Global::BRICK_WIDTH + 8 + (13 - num_cols) * 16,
+                y * Global::ALL_SPRITES_HEIGHT);
+        bricks.append(b);
+      }
+
+  return bricks;
 }

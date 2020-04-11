@@ -22,13 +22,37 @@
   aledrums@gmail.com
 */
 
-#include <QApplication>
-#include <gamemain.H>
+#include <brick.H>
+#include <spritesheet.H>
+#include <audio.H>
 
-int main(int argc, char *argv[])
+
+Brick::Brick(double _x, double _y)
+  : x(_x), y(_y)
 {
-  QApplication app(argc, argv);
-  GameMain canvas;
-  canvas.show();
-  return app.exec();
+
+}
+
+bool Brick::is_in_play() const
+{
+  return in_play;
+}
+
+void Brick::hit()
+{
+  Audio::get_instance().play_brick_hit_2();
+  in_play = false;
+}
+
+QRectF Brick::get_collision_rect() const
+{
+  return QRectF(x, y, Global::BRICK_WIDTH, Global::ALL_SPRITES_HEIGHT);
+}
+
+void Brick::draw(QPainter & painter) const
+{
+  if (not in_play)
+    return;
+  painter.drawPixmap(QPoint(x, y), SpriteSheet::get_instance().get(),
+                     Global::all_bricks[color*4+tier]);
 }

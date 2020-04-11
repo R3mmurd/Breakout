@@ -22,13 +22,36 @@
   aledrums@gmail.com
 */
 
-#include <QApplication>
-#include <gamemain.H>
+#ifndef BRICK_H
+#define BRICK_H
 
-int main(int argc, char *argv[])
+#include <QRectF>
+#include <QPainter>
+
+#include <global.H>
+
+class Brick
 {
-  QApplication app(argc, argv);
-  GameMain canvas;
-  canvas.show();
-  return app.exec();
-}
+  int color = 0;
+  int tier = 0;
+
+  double x;
+  double y;
+
+  bool in_play = true;
+
+public:
+  Brick() = default;
+
+  Brick(double, double);
+
+  void hit();
+
+  QRectF get_collision_rect() const;
+
+  void draw(QPainter &) const;
+
+  bool is_in_play() const;
+};
+
+#endif // BRICK_H

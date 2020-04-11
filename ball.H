@@ -22,13 +22,50 @@
   aledrums@gmail.com
 */
 
-#include <QApplication>
-#include <gamemain.H>
+#ifndef BALL_H
+#define BALL_H
 
-int main(int argc, char *argv[])
+#include <QRectF>
+#include <QPainter>
+
+class Ball
 {
-  QApplication app(argc, argv);
-  GameMain canvas;
-  canvas.show();
-  return app.exec();
-}
+  double x;
+  double y;
+  double dx = 0;
+  double dy = 0;
+
+  int skin = 0;
+public:
+  Ball(int);
+
+  bool collides(const QRectF &);
+
+  void set_position(double, double);
+
+  void set_velocity(double, double);
+
+  void reset();
+
+  void update(double);
+
+  void draw(QPainter &) const;
+
+  double get_dx() const;
+
+  void set_dx(double);
+
+  double get_dy() const;
+
+  void set_dy(double);
+
+  double get_x() const;
+
+  double get_y() const;
+
+  void set_x(double);
+
+  void set_y(double);
+};
+
+#endif // BALL_H

@@ -22,13 +22,13 @@
   aledrums@gmail.com
 */
 
-#include <QApplication>
-#include <gamemain.H>
+#include <global.H>
+#include <util.H>
 
-int main(int argc, char *argv[])
-{
-  QApplication app(argc, argv);
-  GameMain canvas;
-  canvas.show();
-  return app.exec();
-}
+bool Global::paused = false;
+
+QVector<QVector<QRectF>> Global::all_paddles = generate_paddle_drawing_rects();
+
+QVector<QRectF> Global::all_balls = generate_ball_drawing_rects();
+
+QVector<QRectF> Global::all_bricks = generate_brick_drawing_rects();

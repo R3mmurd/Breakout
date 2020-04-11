@@ -22,13 +22,21 @@
   aledrums@gmail.com
 */
 
-#include <QApplication>
-#include <gamemain.H>
+#ifndef SPRITESHEET_H
+#define SPRITESHEET_H
 
-int main(int argc, char *argv[])
+#include <QPixmap>
+
+#include <singleton.H>
+
+
+class SpriteSheet : public Singleton<SpriteSheet>
 {
-  QApplication app(argc, argv);
-  GameMain canvas;
-  canvas.show();
-  return app.exec();
-}
+  QPixmap breakout;
+public:
+  SpriteSheet();
+
+  const QPixmap & get() const;
+};
+
+#endif // SPRITESHEET_H

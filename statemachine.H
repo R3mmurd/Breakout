@@ -48,7 +48,7 @@ public:
     // Empty
   }
 
-  virtual void exec(ConcreteStateMachine *, double)
+  virtual void update(ConcreteStateMachine *, double)
   {
     // Empty
   }
@@ -64,6 +64,11 @@ public:
   }
 
   virtual void key_pressed(ConcreteStateMachine *, QKeyEvent *)
+  {
+    // Empty
+  }
+
+  virtual void key_released(ConcreteStateMachine *, QKeyEvent *)
   {
     // Empty
   }
@@ -113,7 +118,7 @@ public:
   void update(double dt)
   {
     assert(current_state != nullptr);
-    current_state->exec(me(), dt);
+    current_state->update(me(), dt);
   }
 
   void change_state(State<ConcreteStateMachine> * new_state)
@@ -142,6 +147,11 @@ public:
   void key_pressed(QKeyEvent * event)
   {
     current_state->key_pressed(me(), event);
+  }
+
+  void key_released(QKeyEvent * event)
+  {
+    current_state->key_released(me(), event);
   }
 };
 

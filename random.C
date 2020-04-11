@@ -22,13 +22,42 @@
   aledrums@gmail.com
 */
 
-#include <QApplication>
-#include <gamemain.H>
+#include <random.H>
 
-int main(int argc, char *argv[])
+Random::Random()
+  : rng(clock_t::now().time_since_epoch().count())
 {
-  QApplication app(argc, argv);
-  GameMain canvas;
-  canvas.show();
-  return app.exec();
+  // Empty
+}
+
+void Random::set_seed(unsigned s)
+{
+  rng.seed(s);
+}
+
+double Random::random()
+{
+  return std::generate_canonical<double, 64>(rng);
+}
+
+double Random::random(double n)
+{
+  return random(0.0, n);
+}
+
+double Random::random(double a, double b)
+{
+  std::uniform_real_distribution<double> dist(a, b);
+  return dist(rng);
+}
+
+int Random::random(int n)
+{
+  return random(0, n);
+}
+
+int Random::random(int a, int b)
+{
+  std::uniform_int_distribution<int> dist(a, b - 1);
+  return dist(rng);
 }

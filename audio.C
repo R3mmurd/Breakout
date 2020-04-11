@@ -29,7 +29,7 @@ Audio::Audio()
    paddle_hit = new QSound(":/audio/paddle-hit");
    score = new QSound(":/audio/score");
    wall_hit = new QSound(":/audio/wall-hit");
-   confirm = new QSound(":/audio/confirm");
+   // confirm = new QSound(":/audio/confirm");
    select = new QSound(":/audio/select");
    no_select = new QSound(":/audio/no-select");
    brick_hit_1 = new QSound(":/audio/brick-hit-1");

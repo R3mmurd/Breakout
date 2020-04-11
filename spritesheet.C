@@ -22,13 +22,15 @@
   aledrums@gmail.com
 */
 
-#include <QApplication>
-#include <gamemain.H>
+#include <spritesheet.H>
 
-int main(int argc, char *argv[])
+SpriteSheet::SpriteSheet()
+  : breakout(":/images/breakout")
 {
-  QApplication app(argc, argv);
-  GameMain canvas;
-  canvas.show();
-  return app.exec();
+  // Empty
+}
+
+const QPixmap & SpriteSheet::get() const
+{
+  return breakout;
 }

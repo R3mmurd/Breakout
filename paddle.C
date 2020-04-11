@@ -22,13 +22,47 @@
   aledrums@gmail.com
 */
 
-#include <QApplication>
-#include <gamemain.H>
+#include <paddle.H>
+#include <global.H>
+#include <spritesheet.H>
 
-int main(int argc, char *argv[])
+Paddle::Paddle()
 {
-  QApplication app(argc, argv);
-  GameMain canvas;
-  canvas.show();
-  return app.exec();
+
+}
+
+void Paddle::move_left()
+{
+  dx = -Global::PADDLE_SPEED;
+}
+
+void Paddle::move_right()
+{
+  dx = Global::PADDLE_SPEED;
+}
+
+void Paddle::stop()
+{
+  dx = 0;
+}
+
+void Paddle::update(double dt)
+{
+  double nx = x + dx*dt;
+
+  if (dx < 0)
+    x = std::max<double>(0, nx);
+  else if (dx > 0)
+    x = std::min<double>(Global::VIRTUAL_WIDTH - width, nx);
+}
+
+void Paddle::draw(QPainter & painter) const
+{
+  painter.drawPixmap(QPoint(x, y), SpriteSheet::get_instance().get(),
+                     Global::all_paddles[skin][size]);
+}
+
+QRectF Paddle::get_collision_rect() const
+{
+  return QRectF(x, y, width, height);
 }
