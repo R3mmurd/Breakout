@@ -41,6 +41,10 @@ public:
 
   bool collides(const QRectF &);
 
+  QRectF get_collision_rect() const;
+
+  void rebound(const QRectF &);
+
   void set_position(double, double);
 
   void set_velocity(double, double);

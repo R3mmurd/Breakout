@@ -75,11 +75,11 @@ void StartState::draw(GameMain *, QPainter & painter)
 }
 
 PlayState::PlayState()
-  : ball(Random::get_instance().random(7)),
+  : ball(Random::get_instance().unif(7)),
     bricks(LevelMaker::get_instance().create_map())
 {
-  ball.set_velocity(Random::get_instance().random(-200, 200),
-                    Random::get_instance().random(-60, -50));
+  ball.set_velocity(Random::get_instance().unif(-200, 200),
+                    Random::get_instance().unif(-60, -50));
 
   ball.set_position(Global::VIRTUAL_WIDTH/2 - Global::BALL_WIDTH/2,
                     Global::VIRTUAL_HEIGHT - 42);
@@ -97,14 +97,24 @@ void PlayState::update(GameMain *, double dt)
 
   if (ball.collides(paddle_collision_rect))
     {
-      ball.set_y(paddle.get_collision_rect().top()-Global::BALL_HEIGHT);
-      ball.set_dy(-ball.get_dy());
+      QRectF intersection =
+          ball.get_collision_rect().intersected(paddle_collision_rect);
+      ball.rebound(intersection);
       Audio::get_instance().play_paddle_hit();
     }
 
   for (Brick & b : bricks)
-    if (b.is_in_play() and ball.collides(b.get_collision_rect()))
-      b.hit();
+    {
+      QRectF brick_collision_rect = b.get_collision_rect();
+      if (b.is_in_play() and ball.collides(brick_collision_rect))
+        {
+          b.hit();
+          QRectF intersection =
+              ball.get_collision_rect().intersected(brick_collision_rect);
+          ball.rebound(intersection);
+        }
+
+    }
 
 }
 

@@ -40,15 +40,15 @@ public:
 
   void set_seed(unsigned);
 
-  double random();
+  double unif();
 
-  double random(double);
+  double unif(double);
 
-  double random(double, double);
+  double unif(double, double);
 
-  int random(int);
+  int unif(int);
 
-  int random(int, int);
+  int unif(int, int);
 };
 
 #endif // RANDOM_H

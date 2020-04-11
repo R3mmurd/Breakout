@@ -33,8 +33,8 @@ LevelMaker::LevelMaker()
 
 QVector<Brick> LevelMaker::create_map()
 {
-  int num_rows = Random::get_instance().random(1, 5);
-  int num_cols = Random::get_instance().random(7, 13);
+  int num_rows = Random::get_instance().unif(1, 5);
+  int num_cols = Random::get_instance().unif(7, 13);
 
   QVector<Brick> bricks;
 

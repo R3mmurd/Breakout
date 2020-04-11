@@ -79,6 +79,39 @@ bool Ball::collides(const QRectF & target)
   return collision_rectangle.intersects(target);
 }
 
+QRectF Ball::get_collision_rect() const
+{
+  return QRectF(x, y, Global::BALL_WIDTH, Global::BALL_HEIGHT);
+}
+
+void Ball::rebound(const QRectF & r)
+{
+  double w = r.width();
+  double h = r.height();
+
+  double min = std::min(w, h);
+
+  if (min == h)
+    w = 0;
+  else
+    h = 0;
+
+  if (x < r.x())
+    w *= -1;
+
+  if (y < r.y())
+    h *= -1;
+
+  x += w;
+  y += h;
+
+  if (w != 0)
+    dx *= -1;
+
+  if (h != 0)
+    dy *= -1;
+}
+
 void Ball::set_position(double _x, double _y)
 {
   x = _x;
