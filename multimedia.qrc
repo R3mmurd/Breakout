@@ -2,7 +2,7 @@
     <qresource prefix="/audio">
         <file alias="brick-hit-1">audio/brick-hit-1.wav</file>
         <file alias="brick-hit-2">audio/brick-hit-2.wav</file>
-        <file alias="conform">audio/confirm.wav</file>
+        <file alias="confirm">audio/confirm.wav</file>
         <file alias="high-score">audio/high_score.wav</file>
         <file alias="hurt">audio/hurt.wav</file>
         <file alias="music">audio/music.wav</file>
@@ -18,11 +18,8 @@
     <qresource prefix="/images">
         <file alias="arrows">images/arrows.png</file>
         <file alias="background">images/background.png</file>
-        <file alias="block">images/blocks.png</file>
         <file alias="breakout">images/breakout.png</file>
-        <file alias="hearts">images/hearts.png</file>
-        <file alias="particle">images/particle.png</file>
-        <file alias="ui">images/ui.png</file>
+        <file alias="opaque-arrows">images/opaque-arrows.png</file>
     </qresource>
     <qresource prefix="/fonts">
         <file alias="font">fonts/font.ttf</file>

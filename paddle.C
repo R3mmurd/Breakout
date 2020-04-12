@@ -95,6 +95,6 @@ void Paddle::update(double dt)
 
 void Paddle::draw(QPainter & painter) const
 {
-  painter.drawPixmap(QPoint(x, y), SpriteSheet::get_instance().get(),
+  painter.drawPixmap(QPoint(x, y), SpriteSheet::get_instance().get_breakout(),
                      Global::all_paddles[skin][size]);
 }

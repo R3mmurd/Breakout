@@ -138,6 +138,6 @@ void Ball::update(double dt)
 
 void Ball::draw(QPainter & painter) const
 {
-  painter.drawPixmap(QPoint(x, y), SpriteSheet::get_instance().get(),
+  painter.drawPixmap(QPoint(x, y), SpriteSheet::get_instance().get_breakout(),
                      Global::all_balls[skin]);
 }

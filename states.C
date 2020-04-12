@@ -59,7 +59,7 @@ void StartState::key_pressed(GameMain * sm, QKeyEvent * event)
           Global::level = 1;
           LevelMaker::get_instance().create_map(Global::level);
           Paddle::get_instance().reset();
-          sm->change_state(ServeState::get_ptr_instance());
+          sm->change_state(PaddleSelectState::get_ptr_instance());
         }
       else
         sm->change_state(HighScoreState::get_ptr_instance());
@@ -156,8 +156,10 @@ void ServeState::key_released(GameMain *, QKeyEvent *)
 
 void PlayState::enter(GameMain *)
 {
-  ball.set_velocity(Random::get_instance().unif(-200, 200),
-                    Random::get_instance().unif(-60, -50));
+  double dx = Random::get_instance().unif(100, 200);
+  if (Random::get_instance().flip_coin())
+    dx *= -1;
+  ball.set_velocity(dx, Random::get_instance().unif(-60, -50));
 }
 
 void PlayState::update(GameMain * sm, double dt)
@@ -466,4 +468,61 @@ void EnterHighScoreState::draw(GameMain *, QPainter & painter)
   painter.drawText(Global::VIRTUAL_WIDTH/2+20, Global::VIRTUAL_HEIGHT/2,
                    QString(chars[2]));
   painter.setPen(Qt::white);
+}
+
+void PaddleSelectState::enter(GameMain *)
+{
+  selected = 0;
+}
+
+void PaddleSelectState::key_pressed(GameMain * sm, QKeyEvent * event)
+{
+  if (event->key() == Qt::Key_Enter or event->key() == Qt::Key_Return)
+    {
+      Paddle::get_instance().set_skin(selected);
+      Audio::get_instance().play_confirm();
+      sm->change_state(ServeState::get_ptr_instance());
+    }
+
+  if (event->key() == Qt::Key_Left)
+    selected = std::max(0, selected - 1);
+  else if (event->key() == Qt::Key_Right)
+    selected = std::min(3, selected + 1);
+}
+
+void PaddleSelectState::draw(GameMain *, QPainter & painter)
+{
+  painter.setFont(Font::get_instance().small_font());
+  painter.drawText(0, 0, Global::VIRTUAL_WIDTH, Global::VIRTUAL_HEIGHT/4,
+                   Qt::AlignCenter, "Select your paddle with left and right!");
+  painter.drawText(0, 10, Global::VIRTUAL_WIDTH, Global::VIRTUAL_HEIGHT/3,
+                   Qt::AlignCenter, "(Press Enter to continue!)");
+
+  if (selected == 0)
+    painter.drawPixmap(QPoint(Global::VIRTUAL_WIDTH/4 - 24,
+                              Global::VIRTUAL_HEIGHT-Global::VIRTUAL_HEIGHT/3),
+                       SpriteSheet::get_instance().get_opaque_arrows(),
+                       Global::all_arrows[0]);
+  else
+    painter.drawPixmap(QPoint(Global::VIRTUAL_WIDTH/4 - 24,
+                              Global::VIRTUAL_HEIGHT-Global::VIRTUAL_HEIGHT/3),
+                       SpriteSheet::get_instance().get_arrows(),
+                       Global::all_arrows[0]);
+
+  if (selected == 3)
+    painter.drawPixmap(QPoint(Global::VIRTUAL_WIDTH - Global::VIRTUAL_WIDTH/4,
+                              Global::VIRTUAL_HEIGHT-Global::VIRTUAL_HEIGHT/3),
+                       SpriteSheet::get_instance().get_opaque_arrows(),
+                       Global::all_arrows[1]);
+  else
+    painter.drawPixmap(QPoint(Global::VIRTUAL_WIDTH - Global::VIRTUAL_WIDTH/4,
+                              Global::VIRTUAL_HEIGHT-Global::VIRTUAL_HEIGHT/3),
+                       SpriteSheet::get_instance().get_arrows(),
+                       Global::all_arrows[1]);
+
+  painter.drawPixmap(QPoint(Global::VIRTUAL_WIDTH/2-Global::PADDLE_WIDTH_FACTOR,
+                            Global::VIRTUAL_HEIGHT-Global::VIRTUAL_HEIGHT/3),
+                     SpriteSheet::get_instance().get_breakout(),
+                     Global::all_paddles[selected]
+                     [Global::DEFAULT_PADDLE_SIZE]);
 }

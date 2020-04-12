@@ -35,7 +35,7 @@ class Paddle : public Singleton<Paddle>
   friend class Singleton<Paddle>;
 
   int skin = 0;
-  int size = 1;
+  int size = Global::DEFAULT_PADDLE_SIZE;
   double x = 0;
   double y = 0;
   double dx = 0;

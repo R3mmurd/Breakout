@@ -128,7 +128,18 @@ class PaddleSelectState :
     public State<GameMain>,
     public Singleton<PaddleSelectState>
 {
+  friend class Singleton<PaddleSelectState>;
 
+  int selected;
+protected:
+  PaddleSelectState() = default;
+
+public:
+  void enter(GameMain *) override;
+
+  void key_pressed(GameMain *, QKeyEvent *) override;
+
+  void draw(GameMain *, QPainter &) override;
 };
 
 class EnterHighScoreState :

@@ -116,7 +116,7 @@ void Brick::update(double dt)
 void Brick::draw(QPainter & painter) const
 {
   if (in_play)
-    painter.drawPixmap(QPoint(x, y), SpriteSheet::get_instance().get(),
+    painter.drawPixmap(QPoint(x, y), SpriteSheet::get_instance().get_breakout(),
                        Global::all_bricks[color*4+tier]);
   ps.draw(painter);
 }

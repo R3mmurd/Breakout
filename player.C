@@ -48,7 +48,7 @@ void Player::draw(QPainter & painter) const
 
   while (i < health)
     {
-      painter.drawPixmap(QPoint(x, 3), SpriteSheet::get_instance().get(),
+      painter.drawPixmap(QPoint(x, 3), SpriteSheet::get_instance().get_breakout(),
                          fill_heart_drawing_rect);
       x += 11;
       ++i;
@@ -56,7 +56,7 @@ void Player::draw(QPainter & painter) const
 
   while (i < 3)
     {
-      painter.drawPixmap(QPoint(x, 3), SpriteSheet::get_instance().get(),
+      painter.drawPixmap(QPoint(x, 3), SpriteSheet::get_instance().get_breakout(),
                          empty_heart_drawing_rect);
       x += 11;
       ++i;

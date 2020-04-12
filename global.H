@@ -50,6 +50,10 @@ public:
   static constexpr double SMALL_SPRITE_WIDTH = 16;
   static constexpr double BRICK_WIDTH = 32;
   static constexpr double PADDLE_WIDTH_FACTOR = 32;
+  static constexpr double ARROW_WIDTH = 24;
+  static constexpr double ARROW_HEIGHT = 24;
+
+  static constexpr double DEFAULT_PADDLE_SIZE = 1;
 
   static bool paused;
   static int level;
@@ -58,6 +62,7 @@ public:
   static QVector<QVector<QRectF>> all_paddles;
   static QVector<QRectF> all_balls;
   static QVector<QRectF> all_bricks;
+  static QVector<QRectF> all_arrows;
 
 };
 

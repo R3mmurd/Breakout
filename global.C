@@ -36,3 +36,8 @@ QVector<QVector<QRectF>> Global::all_paddles = generate_paddle_drawing_rects();
 QVector<QRectF> Global::all_balls = generate_ball_drawing_rects();
 
 QVector<QRectF> Global::all_bricks = generate_brick_drawing_rects();
+
+QVector<QRectF> Global::all_arrows = {
+  QRectF(0, 0, Global::ARROW_WIDTH, Global::ARROW_HEIGHT),
+  QRectF(Global::ARROW_WIDTH, 0, Global::ARROW_WIDTH, Global::ARROW_HEIGHT)
+};
