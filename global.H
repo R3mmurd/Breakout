@@ -44,16 +44,21 @@ public:
 
   static constexpr double BALL_WIDTH = 8;
   static constexpr double BALL_HEIGHT = 8;
+  static constexpr double HEART_WIDTH = 10;
+  static constexpr double HEART_HEIGHT = 10;
   static constexpr double ALL_SPRITES_HEIGHT = 16;
   static constexpr double SMALL_SPRITE_WIDTH = 16;
   static constexpr double BRICK_WIDTH = 32;
   static constexpr double PADDLE_WIDTH_FACTOR = 32;
 
   static bool paused;
+  static int level;
+  static const QString high_scores_filename;
 
   static QVector<QVector<QRectF>> all_paddles;
   static QVector<QRectF> all_balls;
   static QVector<QRectF> all_bricks;
+
 };
 
 #endif // GLOBAL_H

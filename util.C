@@ -22,6 +22,9 @@
   aledrums@gmail.com
 */
 
+#include <QDir>
+#include <QTextStream>
+
 #include <util.H>
 #include <global.H>
 #include <spritesheet.H>
@@ -116,4 +119,48 @@ QVector<QRectF> generate_brick_drawing_rects()
                                       Global::BRICK_WIDTH,
                                       Global::ALL_SPRITES_HEIGHT), 0, 21);
 
+}
+
+QStringList read_highscores()
+{
+  QString path = QDir::homePath() + QDir::separator() + QString(".breakout");
+  QDir dir(path);
+  if (not dir.exists())
+    dir.mkdir(path);
+  QString filename = path + QDir::separator() + Global::high_scores_filename;
+
+  QFile file(filename);
+
+  if (not file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+      file.open(QIODevice::WriteOnly | QIODevice::Text);
+      file.close();
+      file.open(QIODevice::ReadOnly | QIODevice::Text);
+    }
+
+  QStringList highscores;
+  QTextStream in(&file);
+  while (not in.atEnd())
+    highscores.append(in.readLine());
+  file.close();
+  return highscores;
+}
+
+void write_highscores(const QStringList & highscores)
+{
+  QString path = QDir::homePath() + QDir::separator() + QString(".breakout");
+  QDir dir(path);
+  if (not dir.exists())
+    dir.mkdir(path);
+  QString filename = path + QDir::separator() + Global::high_scores_filename;
+
+  QFile file(filename);
+  file.open(QIODevice::WriteOnly | QIODevice::Text);
+
+  QTextStream out(&file);
+
+  for (const QString s : highscores)
+    out << s << "\n";
+
+  file.close();
 }

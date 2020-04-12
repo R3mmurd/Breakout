@@ -49,6 +49,10 @@ public:
   int unif(int);
 
   int unif(int, int);
+
+  bool flip_coin(double p = 0.5);
+
+  double normal(double mu = 0, double sigma = 1);
 };
 
 #endif // RANDOM_H

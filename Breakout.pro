@@ -30,10 +30,13 @@ QT += core widgets multimedia
 HEADERS += \
     ball.H \
     brick.H \
+    bricks.H \
     gamemain.H \
     global.H \
     levelmaker.H \
     paddle.H \
+    particlesystem.H \
+    player.H \
     random.H \
     spritesheet.H \
     statemachine.H \
@@ -49,11 +52,14 @@ DISTFILES += \
 SOURCES += \
     ball.C \
     brick.C \
+    bricks.C \
     gamemain.C \
     global.C \
     levelmaker.C \
     main.C \
     paddle.C \
+    particlesystem.C \
+    player.C \
     random.C \
     spritesheet.C \
     states.C \

@@ -26,9 +26,46 @@
 #include <global.H>
 #include <spritesheet.H>
 
-Paddle::Paddle()
+void Paddle::set_skin(int value)
 {
+    skin = value;
+}
 
+double Paddle::get_width() const
+{
+    return Global::all_paddles[skin][size].width();
+}
+
+double Paddle::get_height() const
+{
+  return Global::all_paddles[skin][size].height();
+}
+
+double Paddle::get_x() const
+{
+  return x;
+}
+
+double Paddle::get_y() const
+{
+  return y;
+}
+
+double Paddle::get_dx() const
+{
+  return dx;
+}
+
+void Paddle::reset()
+{
+  size = 1;
+  x = Global::VIRTUAL_WIDTH/2 - get_width()/2;
+  y = Global::VIRTUAL_HEIGHT - 32;
+}
+
+QRectF Paddle::get_collision_rect() const
+{
+  return QRectF(x, y, get_width(), get_height());
 }
 
 void Paddle::move_left()
@@ -53,16 +90,11 @@ void Paddle::update(double dt)
   if (dx < 0)
     x = std::max<double>(0, nx);
   else if (dx > 0)
-    x = std::min<double>(Global::VIRTUAL_WIDTH - width, nx);
+    x = std::min<double>(Global::VIRTUAL_WIDTH - get_width(), nx);
 }
 
 void Paddle::draw(QPainter & painter) const
 {
   painter.drawPixmap(QPoint(x, y), SpriteSheet::get_instance().get(),
                      Global::all_paddles[skin][size]);
-}
-
-QRectF Paddle::get_collision_rect() const
-{
-  return QRectF(x, y, width, height);
 }

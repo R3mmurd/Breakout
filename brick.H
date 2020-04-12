@@ -29,25 +29,39 @@
 #include <QPainter>
 
 #include <global.H>
+#include <particlesystem.H>
+
+#include <tuple>
 
 class Brick
 {
+  static const std::tuple<int, int, int> color_palette[5];
   int color = 0;
   int tier = 0;
 
-  double x;
-  double y;
+  double x = 0;
+  double y = 0;
 
   bool in_play = true;
 
+  ParticleSystem ps;
+
 public:
-  Brick() = default;
+  Brick();
 
   Brick(double, double);
+
+  void set_color(int value);
+
+  void set_tier(int value);
+
+  int score() const;
 
   void hit();
 
   QRectF get_collision_rect() const;
+
+  void update(double);
 
   void draw(QPainter &) const;
 

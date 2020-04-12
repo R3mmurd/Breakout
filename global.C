@@ -27,6 +27,10 @@
 
 bool Global::paused = false;
 
+int Global::level = 0;
+
+const QString Global::high_scores_filename = "highscores.txt";
+
 QVector<QVector<QRectF>> Global::all_paddles = generate_paddle_drawing_rects();
 
 QVector<QRectF> Global::all_balls = generate_ball_drawing_rects();

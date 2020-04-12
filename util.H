@@ -39,4 +39,8 @@ QVector<QRectF> generate_ball_drawing_rects();
 
 QVector<QRectF> generate_brick_drawing_rects();
 
+QStringList read_highscores();
+
+void write_highscores(const QStringList &);
+
 #endif // UTIL_H

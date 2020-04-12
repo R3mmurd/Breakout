@@ -27,15 +27,31 @@
 
 #include <QVector>
 
-#include <brick.H>
+#include <bricks.H>
 #include <singleton.H>
 
 class LevelMaker : public Singleton<LevelMaker>
 {
-public:
-  LevelMaker();
+  friend class Singleton<LevelMaker>;
 
-  QVector<Brick> create_map();
+protected:
+    LevelMaker() = default;
+
+public:
+  enum class GlobalPatterns
+  {
+    NONE, SINGLE_PYRAMID, MULTI_PYRAMID
+  };
+
+  enum class PerRowPattern
+  {
+    SOLID,     // All color the same in this row
+    ALTERNATE, // Alternate colors
+    SKIP,      // Skip every other block
+    NONE       // No block this row
+  };
+
+  void create_map(int);
 };
 
 #endif // LEVELMAKER_H

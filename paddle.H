@@ -27,20 +27,38 @@
 
 #include <QPainter>
 
+#include <singleton.H>
 #include <global.H>
 
-class Paddle
+class Paddle : public Singleton<Paddle>
 {
+  friend class Singleton<Paddle>;
+
   int skin = 0;
   int size = 1;
-
-  double width = Global::all_paddles[skin][size].width();
-  double height = Global::all_paddles[skin][size].height();
+  double x = 0;
+  double y = 0;
   double dx = 0;
-  double x = Global::VIRTUAL_WIDTH/2 - width/2;
-  double y = Global::VIRTUAL_HEIGHT - 32;
+
+protected:
+  Paddle() = default;
+
 public:
-  Paddle();
+  void set_skin(int);
+
+  double get_width() const;
+
+  double get_height() const;
+
+  double get_x() const;
+
+  double get_y() const;
+
+  double get_dx() const;
+
+  void reset();
+
+  QRectF get_collision_rect() const;
 
   void move_left();
 
@@ -51,8 +69,6 @@ public:
   void update(double);
 
   void draw(QPainter &) const;
-
-  QRectF get_collision_rect() const;
 };
 
 #endif // PADDLE_H

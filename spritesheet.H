@@ -32,10 +32,14 @@
 
 class SpriteSheet : public Singleton<SpriteSheet>
 {
+  friend class Singleton<SpriteSheet>;
+
   QPixmap breakout;
-public:
+
+protected:
   SpriteSheet();
 
+public:
   const QPixmap & get() const;
 };
 

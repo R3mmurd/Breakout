@@ -26,25 +26,67 @@
 #include <random.H>
 #include <global.H>
 
-LevelMaker::LevelMaker()
+void LevelMaker::create_map(int level)
 {
+  Random & random = Random::get_instance();
+  int num_rows = random.unif(1, 6);
+  int num_cols = random.unif(7, 14);
+  if (num_cols % 2 == 0)
+    ++num_cols;
 
-}
+  int highest_tier = std::min(3, level/5);
+  int highest_color = std::min(5, level % 5 + 3);
 
-QVector<Brick> LevelMaker::create_map()
-{
-  int num_rows = Random::get_instance().unif(1, 5);
-  int num_cols = Random::get_instance().unif(7, 13);
+  Bricks & bricks = Bricks::get_instance();
+  bricks.clear();
 
-  QVector<Brick> bricks;
+  while (bricks.empty())
+    {
+      for (int y = 1; y <= num_rows; ++y)
+        {
+          bool skip_pattern = random.flip_coin();
+          bool skip_flag = random.flip_coin();
+          bool alternate_pattern = random.flip_coin();
+          bool alternate_flag = random.flip_coin();
+          int alternate_color_1 = random.unif(0, highest_color);
+          int alternate_color_2 = random.unif(0, highest_color);
+          int alternate_tier_1 = random.unif(0, highest_tier + 1);
+          int alternate_tier_2 = random.unif(0, highest_tier + 1);
+          int solid_color = random.unif(0, highest_color);
+          int solid_tier = random.unif(0, highest_tier + 1);
+          for (int x = 0; x < num_cols; ++x)
+            {
+              if (skip_pattern and skip_flag)
+                {
+                  skip_flag = not skip_flag;
+                  continue;
+                }
 
-  for (int y = 1; y <= num_rows; ++y)
-    for (int x = 0; x < num_cols; ++x)
-      {
-        Brick b(x * Global::BRICK_WIDTH + 8 + (13 - num_cols) * 16,
-                y * Global::ALL_SPRITES_HEIGHT);
-        bricks.append(b);
-      }
+              skip_flag = not skip_flag;
+              Brick b(x * Global::BRICK_WIDTH + 8 + (13 - num_cols) * 16,
+                      y * Global::ALL_SPRITES_HEIGHT);
 
-  return bricks;
+              if (alternate_pattern and alternate_flag)
+                {
+                  b.set_color(alternate_color_1);
+                  b.set_tier(alternate_tier_1);
+                  alternate_flag = not alternate_flag;
+                }
+              else
+                {
+                  b.set_color(alternate_color_2);
+                  b.set_tier(alternate_tier_2);
+                  alternate_flag = not alternate_flag;
+                }
+
+              if (not alternate_pattern)
+                {
+                  b.set_color(solid_color);
+                  b.set_tier(solid_tier);
+                }
+
+              bricks.append(b);
+            }
+        }
+    }
 }

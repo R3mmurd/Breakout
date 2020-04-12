@@ -27,42 +27,6 @@
 #include <audio.H>
 #include <spritesheet.H>
 
-void Ball::set_x(double value)
-{
-  x = value;
-}
-
-void Ball::set_y(double value)
-{
-  y = value;
-}
-
-Ball::Ball(int _skin)
-  : skin(_skin)
-{
-  // Empty
-}
-
-double Ball::get_dx() const
-{
-  return dx;
-}
-
-void Ball::set_dx(double value)
-{
-  dx = value;
-}
-
-double Ball::get_dy() const
-{
-  return dy;
-}
-
-void Ball::set_dy(double value)
-{
-  dy = value;
-}
-
 double Ball::get_x() const
 {
   return x;
@@ -73,15 +37,48 @@ double Ball::get_y() const
   return y;
 }
 
-bool Ball::collides(const QRectF & target)
+double Ball::get_dx() const
 {
-  QRectF collision_rectangle(x, y, Global::BALL_WIDTH, Global::BALL_HEIGHT);
-  return collision_rectangle.intersects(target);
+  return dx;
+}
+
+double Ball::get_dy() const
+{
+  return dy;
+}
+
+void Ball::set_position(double _x, double _y)
+{
+  x = _x;
+  y = _y;
+}
+
+void Ball::set_velocity(double _dx, double _dy)
+{
+  dx = _dx;
+  dy = _dy;
+}
+
+void Ball::set_skin(int _skin)
+{
+  skin = _skin;
+}
+
+void Ball::reset()
+{
+  x = Global::VIRTUAL_WIDTH / 2.0 - 2;
+  y = Global::VIRTUAL_HEIGHT / 2.0 - 2;
+  dy = dx = 0;
 }
 
 QRectF Ball::get_collision_rect() const
 {
   return QRectF(x, y, Global::BALL_WIDTH, Global::BALL_HEIGHT);
+}
+
+bool Ball::collides(const QRectF & target)
+{
+  return get_collision_rect().intersects(target);
 }
 
 void Ball::rebound(const QRectF & r)
@@ -110,25 +107,6 @@ void Ball::rebound(const QRectF & r)
 
   if (h != 0)
     dy *= -1;
-}
-
-void Ball::set_position(double _x, double _y)
-{
-  x = _x;
-  y = _y;
-}
-
-void Ball::set_velocity(double _dx, double _dy)
-{
-  dx = _dx;
-  dy = _dy;
-}
-
-void Ball::reset()
-{
-  x = Global::VIRTUAL_WIDTH / 2.0 - 2;
-  y = Global::VIRTUAL_HEIGHT / 2.0 - 2;
-  dy = dx = 0;
 }
 
 void Ball::update(double dt)

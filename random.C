@@ -61,3 +61,14 @@ int Random::unif(int a, int b)
   std::uniform_int_distribution<int> dist(a, b - 1);
   return dist(rng);
 }
+
+bool Random::flip_coin(double p)
+{
+  return unif() > p;
+}
+
+double Random::normal(double mu, double sigma)
+{
+  std::normal_distribution<double> dist(mu, sigma);
+  return dist(rng);
+}
