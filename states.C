@@ -32,11 +32,6 @@
 #include <levelmaker.H>
 #include <util.H>
 
-StartState::StartState()
-{
-  Audio::get_instance().play_music();
-}
-
 void StartState::enter(GameMain *)
 {
   Player::get_instance().reset();
@@ -57,7 +52,9 @@ void StartState::key_pressed(GameMain * sm, QKeyEvent * event)
       if (highlighted == 1)
         {
           Global::level = 1;
+          Global::recover_points = 5000;
           LevelMaker::get_instance().create_map(Global::level);
+          Global::num_live_bricks = BrickSet::get_instance().size();
           Paddle::get_instance().reset();
           sm->change_state(PaddleSelectState::get_ptr_instance());
         }
@@ -93,25 +90,20 @@ void StartState::draw(GameMain *, QPainter & painter)
   painter.setPen(Qt::white);
 }
 
-ServeState::ServeState()
-{
-  ball.set_skin(Random::get_instance().unif(7));
-}
-
 void ServeState::enter(GameMain *)
 {
-  ball.set_position(
-        paddle.get_x() + paddle.get_width()/2.0 - Global::BALL_WIDTH/2.0,
-        paddle.get_y() - Global::BALL_HEIGHT
-  );
+  balls.clear();
+  balls.append(
+        Ball(paddle.get_x() + paddle.get_width()/2.0 - Global::BALL_WIDTH/2.0,
+             paddle.get_y() - Global::BALL_HEIGHT));
 }
 
 void ServeState::update(GameMain *, double dt)
 {
   paddle.update(dt);
-  ball.set_position(
-        paddle.get_x() + paddle.get_width()/2.0 - Global::BALL_WIDTH/2.0,
-        paddle.get_y() - Global::BALL_HEIGHT
+  balls.begin()->set_position(
+    paddle.get_x() + paddle.get_width()/2.0 - Global::BALL_WIDTH/2.0,
+    paddle.get_y() - Global::BALL_HEIGHT
   );
 }
 
@@ -119,7 +111,9 @@ void ServeState::draw(GameMain *, QPainter & painter)
 {
   Player::get_instance().draw(painter);
   paddle.draw(painter);
-  ball.draw(painter);
+
+  for (const Ball & ball : balls)
+    ball.draw(painter);
 
   for (const Brick & b : bricks)
     b.draw(painter);
@@ -159,7 +153,10 @@ void PlayState::enter(GameMain *)
   double dx = Random::get_instance().unif(100, 200);
   if (Random::get_instance().flip_coin())
     dx *= -1;
+  Ball & ball = const_cast<Ball &>(*balls.begin());
   ball.set_velocity(dx, Random::get_instance().unif(-60, -50));
+  hit_count = 0;
+  powerups.clear();
 }
 
 void PlayState::update(GameMain * sm, double dt)
@@ -168,9 +165,38 @@ void PlayState::update(GameMain * sm, double dt)
     return;
 
   paddle.update(dt);
-  ball.update(dt);
+  QRectF paddle_collision_rect = paddle.get_collision_rect();
 
-  if (ball.get_y() > Global::VIRTUAL_HEIGHT)
+  QMutableListIterator<Ball> it(balls);
+
+  while (it.hasNext())
+    {
+      Ball & ball = it.next();
+      ball.update(dt);
+
+      if (ball.collides(paddle_collision_rect))
+        {
+          Audio::get_instance().play_paddle_hit();
+          QRectF intersection =
+              ball.get_collision_rect().intersected(paddle_collision_rect);
+          ball.rebound(intersection);
+          double dx = ball.get_dx();
+          double dy = ball.get_dy();
+          double center_delta = paddle_collision_rect.x()
+              + paddle_collision_rect.width()/2 - ball.get_x();
+          if (center_delta > 0 and paddle.get_dx() < 0)
+            dx = -50 - 8*center_delta;
+          else if (center_delta < 0 and paddle.get_dx() > 0)
+            dx = 50 - 8*center_delta;
+
+          ball.set_velocity(dx, dy);
+        }
+
+      if (ball.get_y() > Global::VIRTUAL_HEIGHT)
+        it.remove();
+    }
+
+  if (balls.size() == 0)
     {
       player.dec_health();
       Audio::get_instance().play_hurt();
@@ -181,46 +207,107 @@ void PlayState::update(GameMain * sm, double dt)
         sm->change_state(ServeState::get_ptr_instance());
     }
 
-  QRectF paddle_collision_rect = paddle.get_collision_rect();
+  QMutableListIterator<PowerUp> pit(powerups);
 
-  if (ball.collides(paddle_collision_rect))
+  while (pit.hasNext())
     {
-      Audio::get_instance().play_paddle_hit();
-      QRectF intersection =
-          ball.get_collision_rect().intersected(paddle_collision_rect);
-      ball.rebound(intersection);
-      double dx = ball.get_dx();
-      double dy = ball.get_dy();
-      double center_delta = paddle_collision_rect.x()
-          + paddle_collision_rect.width()/2 - ball.get_x();
-      if (center_delta > 0 and paddle.get_dx() < 0)
-        dx = -50 - 8*center_delta;
-      else if (center_delta < 0 and paddle.get_dx() > 0)
-        dx = 50 - 8*center_delta;
+      PowerUp & powerup = pit.next();
+      powerup.update(dt);
 
-      ball.set_velocity(dx, dy);
-    }
+      QRectF collision_rect = powerup.get_collision_rect();
 
-  bool victory = true;
-  for (Brick & b : bricks)
-    {
-      b.update(dt);
-      QRectF brick_collision_rect = b.get_collision_rect();
-      if (b.is_in_play() and ball.collides(brick_collision_rect))
+      if (collision_rect.intersects(paddle_collision_rect))
         {
-          player.add_score(b.score());
-          b.hit();
-          QRectF intersection =
-              ball.get_collision_rect().intersected(brick_collision_rect);
-          ball.rebound(intersection);
+          if (powerup.get_type() == PowerUp::Type::BALL)
+            {
+              Ball ball1(paddle.get_x() + paddle.get_width()/2.0
+                          - Global::BALL_WIDTH/2.0,
+                          paddle.get_y() - Global::BALL_HEIGHT);
+              double dx = Random::get_instance().unif(100, 200);
+              if (Random::get_instance().flip_coin())
+                dx *= -1;
+              ball1.set_velocity(dx, Random::get_instance().unif(-60, -50));
+              balls.append(ball1);
+              Ball ball2(paddle.get_x() + paddle.get_width()/2.0
+                          - Global::BALL_WIDTH/2.0,
+                          paddle.get_y() - Global::BALL_HEIGHT);
+              dx = Random::get_instance().unif(100, 200);
+              if (Random::get_instance().flip_coin())
+                dx *= -1;
+              ball2.set_velocity(dx, Random::get_instance().unif(-60, -50));
+              balls.append(ball2);
+            }
+          else if (powerup.get_type() == PowerUp::Type::KEY
+                   and Global::locked_brick_ptr != nullptr)
+            {
+              Global::locked_brick_ptr->unlock();
+              Global::locked_brick_ptr = nullptr;
+            }
+          pit.remove();
         }
-      victory = victory and not b.is_in_play();
+
+      if (collision_rect.y() > Global::VIRTUAL_WIDTH)
+        pit.remove();
     }
 
-  if (victory)
+  for (Ball & ball : balls)
     {
-      Audio::get_instance().play_victory();
-      sm->change_state(VictoryState::get_ptr_instance());
+      bool victory = true;
+
+      for (Brick & b : bricks)
+          {
+            b.update(dt);
+            QRectF brick_collision_rect = b.get_collision_rect();
+            if (b.is_in_play() and ball.collides(brick_collision_rect))
+              {
+                player.add_score(b.score());
+                b.hit();
+                ++hit_count;
+
+                if (not b.is_in_play())
+                  --Global::num_live_bricks;
+
+                if (Global::locked_brick_ptr != nullptr
+                    and Random::get_instance().unif(Global::num_live_bricks) == 1)
+                  powerups.append(PowerUp(brick_collision_rect.center().x()
+                                          - Global::POWERUP_WIDTH/2,
+                                          brick_collision_rect.y()
+                                          +Global::ALL_SPRITES_HEIGHT,
+                                          PowerUp::Type::KEY));
+                else
+                  {
+                    int p = 10 + std::pow(10, powerups.size())
+                        + std::pow(10, balls.size());
+                    if (Random::get_instance().unif(p) < hit_count)
+                      {
+                        powerups.append(PowerUp(
+                                          brick_collision_rect.center().x()
+                                          - Global::POWERUP_WIDTH/2,
+                                          brick_collision_rect.y()
+                                          + Global::ALL_SPRITES_HEIGHT,
+                                          PowerUp::Type::BALL));
+                        hit_count = 0;
+                      }
+                  }
+
+                if (player.get_score() > Global::recover_points)
+                  {
+                    player.inc_health();
+                    Global::recover_points *= 2;
+                    Audio::get_instance().play_recover();
+                  }
+
+                QRectF intersection =
+                    ball.get_collision_rect().intersected(brick_collision_rect);
+                ball.rebound(intersection);
+              }
+            victory = victory and not b.is_in_play();
+          }
+      if (victory)
+        {
+          Audio::get_instance().play_victory();
+          sm->change_state(VictoryState::get_ptr_instance());
+        }
     }
 }
 
@@ -233,12 +320,19 @@ void PlayState::draw(GameMain *, QPainter & painter)
                        Global::VIRTUAL_WIDTH, Global::VIRTUAL_HEIGHT,
                        Qt::AlignCenter, "PAUSED");
     }
+
   player.draw(painter);
-  paddle.draw(painter);
-  ball.draw(painter);
+
+  for (const PowerUp & powerup : powerups)
+    powerup.draw(painter);
+
+  for (const Ball & ball : balls)
+    ball.draw(painter);
 
   for (const Brick & b : bricks)
     b.draw(painter);
+
+  paddle.draw(painter);
 }
 
 void PlayState::key_pressed(GameMain *, QKeyEvent * event)
@@ -290,7 +384,7 @@ void GameOverState::draw(GameMain *, QPainter & painter)
 void VictoryState::update(GameMain *, double dt)
 {
   paddle.update(dt);
-  ball.set_position(
+  balls.first().set_position(
         paddle.get_x() + paddle.get_width()/2.0 - Global::BALL_WIDTH/2.0,
         paddle.get_y() - Global::BALL_HEIGHT
   );
@@ -299,8 +393,8 @@ void VictoryState::update(GameMain *, double dt)
 void VictoryState::draw(GameMain *, QPainter & painter)
 {
   Player::get_instance().draw(painter);
-  Paddle::get_instance().draw(painter);
-  Ball::get_instance().draw(painter);
+  paddle.draw(painter);
+  balls.first().draw(painter);
 
   painter.setFont(Font::get_instance().large_font());
   painter.drawText(0, 0, Global::VIRTUAL_WIDTH, Global::VIRTUAL_HEIGHT/2,
@@ -325,6 +419,7 @@ void VictoryState::key_pressed(GameMain * sm, QKeyEvent * event)
     {
       ++Global::level;
       LevelMaker::get_instance().create_map(Global::level);
+      Global::num_live_bricks = BrickSet::get_instance().size();
       sm->change_state(ServeState::get_ptr_instance());
     }
 }

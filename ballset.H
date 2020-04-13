@@ -22,21 +22,22 @@
   aledrums@gmail.com
 */
 
-#ifndef BRICKS_H
-#define BRICKS_H
+#ifndef BALLSET_H
+#define BALLSET_H
 
-#include <QVector>
+#include <QList>
 
-#include <brick.H>
 #include <singleton.H>
+#include <ball.H>
 
-class Bricks :
-    public QVector<Brick>,
-    public Singleton<Bricks>
+class BallSet :
+    public QList<Ball>,
+    public Singleton<BallSet>
 {
-  friend class Singleton<Bricks>;
+  friend class Singleton<BallSet>;
+
 protected:
-  Bricks() = default;
+  BallSet() = default;
 };
 
-#endif // BRICKS_H
+#endif // BALLSET_H

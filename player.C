@@ -35,6 +35,13 @@ void Player::dec_health()
   --health;
 }
 
+void Player::inc_health()
+{
+  if (health == 3)
+    return;
+  ++health;
+}
+
 void Player::add_score(int value)
 {
   score += value;

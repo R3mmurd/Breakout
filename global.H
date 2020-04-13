@@ -28,6 +28,8 @@
 #include <QVector>
 #include <QRectF>
 
+class Brick;
+
 class Global
 {
 public:
@@ -44,6 +46,8 @@ public:
 
   static constexpr double BALL_WIDTH = 8;
   static constexpr double BALL_HEIGHT = 8;
+  static constexpr double POWERUP_WIDTH = 16;
+  static constexpr double POWERUP_HEIGHT = 16;
   static constexpr double HEART_WIDTH = 10;
   static constexpr double HEART_HEIGHT = 10;
   static constexpr double ALL_SPRITES_HEIGHT = 16;
@@ -55,15 +59,20 @@ public:
 
   static constexpr double DEFAULT_PADDLE_SIZE = 1;
 
+  static Brick * locked_brick_ptr;
   static bool paused;
   static int level;
+  static int recover_points;
+  static int num_live_bricks;
+
   static const QString high_scores_filename;
 
   static QVector<QVector<QRectF>> all_paddles;
   static QVector<QRectF> all_balls;
   static QVector<QRectF> all_bricks;
   static QVector<QRectF> all_arrows;
-
+  static QVector<QRectF> all_powerups;
+  static QRectF locked_brick;
 };
 
 #endif // GLOBAL_H

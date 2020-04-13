@@ -64,7 +64,7 @@ int Random::unif(int a, int b)
 
 bool Random::flip_coin(double p)
 {
-  return unif() > p;
+  return unif() < p;
 }
 
 double Random::normal(double mu, double sigma)

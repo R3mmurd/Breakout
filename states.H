@@ -28,9 +28,10 @@
 #include <singleton.H>
 #include <statemachine.H>
 #include <paddle.H>
-#include <ball.H>
-#include <bricks.H>
+#include <ballset.H>
+#include <brickset.H>
 #include <player.H>
+#include <powerup.H>
 
 class GameMain;
 
@@ -43,7 +44,7 @@ class StartState :
   int highlighted = 1;
 
 protected:
-  StartState();
+  StartState() = default;
 
 public:
   void enter(GameMain *) override;
@@ -60,11 +61,11 @@ class ServeState :
   friend class Singleton<ServeState>;
 
   Paddle & paddle = Paddle::get_instance();
-  Ball & ball = Ball::get_instance();
-  Bricks & bricks = Bricks::get_instance();
+  BallSet & balls = BallSet::get_instance();
+  BrickSet & bricks = BrickSet::get_instance();
 
 protected:
-  ServeState();
+  ServeState() = default;
 
 public:
   void enter(GameMain *) override;
@@ -85,9 +86,12 @@ class PlayState :
   friend class Singleton<PlayState>;
 
   Paddle & paddle = Paddle::get_instance();
-  Ball & ball = Ball::get_instance();
-  Bricks & bricks = Bricks::get_instance();
+  BallSet & balls = BallSet::get_instance();
+  BrickSet & bricks = BrickSet::get_instance();
   Player & player = Player::get_instance();
+  QList<PowerUp> powerups;
+
+  int hit_count = 0;
 
 protected:
   PlayState() = default;
@@ -181,7 +185,7 @@ class VictoryState :
   friend class Singleton<VictoryState>;
 
   Paddle & paddle = Paddle::get_instance();
-  Ball & ball = Ball::get_instance();
+  BallSet & balls = BallSet::get_instance();
 
 protected:
   VictoryState() = default;

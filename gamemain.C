@@ -28,6 +28,7 @@
 #include <global.H>
 
 #include <states.H>
+#include <audio.H>
 
 #include <QDebug>
 
@@ -36,6 +37,7 @@ GameMain::GameMain(QWidget * parent)
     background(":/images/background"), background_width(background.width()),
     background_height(background.height())
 {
+  Audio::get_instance().play_music();
   setFixedSize(Global::WINDOW_WIDTH, Global::WINDOW_HEIGHT);
   connect(&timer, SIGNAL(timeout()), this, SLOT(update_loop()));
   timer.setInterval(33);

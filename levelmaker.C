@@ -37,7 +37,7 @@ void LevelMaker::create_map(int level)
   int highest_tier = std::min(3, level/5);
   int highest_color = std::min(5, level % 5 + 3);
 
-  Bricks & bricks = Bricks::get_instance();
+  BrickSet & bricks = BrickSet::get_instance();
   bricks.clear();
 
   while (bricks.empty())
@@ -86,6 +86,12 @@ void LevelMaker::create_map(int level)
                 }
 
               bricks.append(b);
+
+              if (Global::locked_brick_ptr == nullptr and random.flip_coin(0.1))
+                {
+                  bricks.last().lock();
+                  Global::locked_brick_ptr = &bricks.last();
+                }
             }
         }
     }

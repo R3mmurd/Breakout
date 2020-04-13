@@ -26,6 +26,13 @@
 #include <global.H>
 #include <audio.H>
 #include <spritesheet.H>
+#include <random.H>
+
+Ball::Ball(double _x, double _y)
+  : x(_x), y(_y), skin(Random::get_instance().unif(7))
+{
+  // Empty
+}
 
 double Ball::get_x() const
 {

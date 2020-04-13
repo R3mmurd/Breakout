@@ -30,21 +30,17 @@
 
 #include <singleton.H>
 
-class Ball : public Singleton<Ball>
+class Ball
 {
-  friend class Singleton<Ball>;
-
   double x;
   double y;
   double dx = 0;
   double dy = 0;
 
   int skin = 0;
-
-protected:
-  Ball() = default;
-
 public:
+  Ball(double, double);
+
   double get_dx() const;
 
   double get_dy() const;

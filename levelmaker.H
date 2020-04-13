@@ -27,7 +27,7 @@
 
 #include <QVector>
 
-#include <bricks.H>
+#include <brickset.H>
 #include <singleton.H>
 
 class LevelMaker : public Singleton<LevelMaker>

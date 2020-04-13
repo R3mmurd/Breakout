@@ -121,6 +121,23 @@ QVector<QRectF> generate_brick_drawing_rects()
 
 }
 
+QVector<QRectF> generate_powerup_drawing_rects()
+{
+  double x = 0;
+  double y = Global::ALL_SPRITES_HEIGHT*12;
+
+  QVector<QRectF> spritesheet;
+
+  for (int i = 0; i < 10; ++i)
+    {
+      spritesheet.append(QRectF(x, y, Global::POWERUP_WIDTH,
+                              Global::POWERUP_HEIGHT));
+      x += Global::POWERUP_WIDTH;
+    }
+
+  return spritesheet;
+}
+
 QStringList read_highscores()
 {
   QString path = QDir::homePath() + QDir::separator() + QString(".breakout");

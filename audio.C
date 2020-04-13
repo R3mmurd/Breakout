@@ -74,11 +74,13 @@ void Audio::play_no_select()
 
 void Audio::play_brick_hit_1()
 {
+  brick_hit_1->stop();
   brick_hit_1->play();
 }
 
 void Audio::play_brick_hit_2()
 {
+  brick_hit_2->stop();
   brick_hit_2->play();
 }
 

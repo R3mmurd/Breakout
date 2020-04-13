@@ -28,6 +28,8 @@ public:
 
   void dec_health();
 
+  void inc_health();
+
   void add_score(int value = 1);
 
   void draw(QPainter &) const;

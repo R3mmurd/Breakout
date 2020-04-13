@@ -62,7 +62,24 @@ void Brick::set_tier(int value)
 
 int Brick::score() const
 {
+  if (locked)
+    return 0;
   return tier*200 + color*25;
+}
+
+bool Brick::is_locked() const
+{
+  return locked;
+}
+
+void Brick::lock()
+{
+  locked = true;
+}
+
+void Brick::unlock()
+{
+  locked = false;
 }
 
 bool Brick::is_in_play() const
@@ -72,6 +89,11 @@ bool Brick::is_in_play() const
 
 void Brick::hit()
 {
+  Audio::get_instance().play_brick_hit_2();
+
+  if (locked)
+    return;
+
   auto t = color_palette[color];
   ps.set_colors({
                   QColor(std::get<0>(t), std::get<1>(t), std::get<2>(t),
@@ -92,15 +114,13 @@ void Brick::hit()
   else
     {
       if (color == 0)
-        in_play = false;
+        {
+          in_play = false;
+          Audio::get_instance().play_brick_hit_1();
+        }
       else
         --color;
     }
-
-  if (in_play)
-    Audio::get_instance().play_brick_hit_2();
-  else
-    Audio::get_instance().play_brick_hit_1();
 }
 
 QRectF Brick::get_collision_rect() const
@@ -116,7 +136,13 @@ void Brick::update(double dt)
 void Brick::draw(QPainter & painter) const
 {
   if (in_play)
-    painter.drawPixmap(QPoint(x, y), SpriteSheet::get_instance().get_breakout(),
-                       Global::all_bricks[color*4+tier]);
+    {
+      if (locked)
+        painter.drawPixmap(QPoint(x, y), SpriteSheet::get_instance().get_breakout(),
+                         Global::locked_brick);
+      else
+        painter.drawPixmap(QPoint(x, y), SpriteSheet::get_instance().get_breakout(),
+                            Global::all_bricks[color*4+tier]);
+    }
   ps.draw(painter);
 }
