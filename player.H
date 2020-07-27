@@ -1,3 +1,9 @@
+/*
+  Breakout remake.
+  
+  Author: Alejandro Mujica (aledrums@gmail.com)
+*/
+
 #ifndef PLAYERINFO_H
 #define PLAYERINFO_H
 

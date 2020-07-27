@@ -1,3 +1,9 @@
+/*
+  Breakout remake.
+  
+  Author: Alejandro Mujica (aledrums@gmail.com)
+*/
+
 #include <powerup.H>
 #include <global.H>
 #include <spritesheet.H>

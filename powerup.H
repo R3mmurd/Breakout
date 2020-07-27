@@ -1,3 +1,9 @@
+/*
+  Breakout remake.
+  
+  Author: Alejandro Mujica (aledrums@gmail.com)
+*/
+
 #ifndef POWERUP_H
 #define POWERUP_H
 
